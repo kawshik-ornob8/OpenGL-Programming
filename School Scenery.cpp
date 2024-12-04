@@ -2,6 +2,29 @@
 #include <GL/glut.h>
 #include <math.h>
 
+float cloudX = -700;
+float cloudSpeed = 2.0f;
+
+
+// Variables for cloud positions
+float cloud1X = 0.0f;
+float cloud2X = -200.0f;
+float cloud3X = -400.0f;
+float cloud4X = -600.0f;
+
+// Time delays for each cloud
+int delay1 = 0;
+int delay2 = 1000;
+int delay3 = 2000;
+int delay4 = 3000;
+
+
+
+void init() {
+    glClearColor(0.5f, 0.5f, 1.0f, 1.0f); //background color
+    gluOrtho2D(-900, 500, -500, 500);      // Set coordinate system
+}
+
 
 
 void drawText(const char* text, float x, float y, float r, float g, float b) {
@@ -45,11 +68,32 @@ void drawSun() {
     drawCircle(-250, 360, 60, 1.0f, 1.0f, 0.0f); // Yellow sun at top-right corner
 }
 
+// Draw clouds
 void drawCloud(float x, float y) {
-    // Three overlapping circles to form a cloud
-    drawCircle(x, y, 30, 1.0f, 1.0f, 1.0f);
-    drawCircle(x + 40, y, 30, 1.0f, 1.0f, 1.0f);
-    drawCircle(x + 20, y + 20, 30, 1.0f, 1.0f, 1.0f);
+    glColor3f(1.0f, 1.0f, 1.0f);
+    drawCircle(x, y, 30, 1.0f, 1.0f, 1.0f);  // White color
+    drawCircle(x + 25, y, 30, 1.0f, 1.0f, 1.0f);  // White color
+    drawCircle(x + 12.5, y + 15, 35, 1.0f, 1.0f, 1.0f);  // White color
+
+}
+
+// Update clouds' position
+void updateCloud(int value) {
+    // Move each cloud separately with a delay
+    if (value >= delay1) cloud1X += 1.0f;
+    if (value >= delay2) cloud2X += 1.0f;
+    if (value >= delay3) cloud3X += 1.0f;
+    if (value >= delay4) cloud4X += 1.0f;
+
+    // Reset clouds when they move off screen
+    if (cloud1X > 800.0f) cloud1X = -250.0f;
+    if (cloud2X > 800.0f) cloud2X = -400.0f;
+    if (cloud3X > 800.0f) cloud3X = -600.0f;
+    if (cloud4X > 800.0f) cloud4X = -800.0f;
+
+    // Redraw and call the update again
+    glutPostRedisplay();
+    glutTimerFunc(16, updateCloud, value + 16); // Increment time
 }
 
 
@@ -72,7 +116,30 @@ void drawTree(float x, float y) {
     drawCircle(x + 20, y + 210, 40, 0.0f, 0.6f, 0.0f);
 }
 
+// Variables for bird position and speed
+float bird1X = -400.0f;// Starting position of the bird
+float bird2X = -450.0f;// Starting position of the bird
+float bird3X = -450.0f;// Starting position of the bird
+float birdSpeed = 2.0f;  // Speed at which the bird moves
 
+// Function to update bird's position
+void updateBirdPosition(int value) {
+    // Move the bird to the right
+    bird1X += birdSpeed;
+    bird2X += birdSpeed;
+    bird3X += birdSpeed;
+
+    // Reset bird's position when it goes off the screen
+    if (bird1X > 800.0f) bird1X = -900.0f;
+    if (bird2X > 800.0f) bird2X = -900.0f;
+    if (bird3X > 800.0f) bird3X = -900.0f;
+
+    // Redraw the scene
+    glutPostRedisplay();
+
+    // Call the update function every 16ms (60 FPS)
+    glutTimerFunc(16, updateBirdPosition, value + 1);
+}
 
 
 
@@ -215,19 +282,26 @@ void river() {
 
 
 void display() {
-    glClearColor(0.5f, 0.5f, 1.0f, 1.0f); //background color
-    gluOrtho2D(-900, 500, -500, 500);
-    glClear(GL_COLOR_BUFFER_BIT);
 
+    glClear(GL_COLOR_BUFFER_BIT);
 
     river();
 
     drawSun();
 
-    drawCloud(-50, 400);
-    drawCloud(200, 350);
-    drawCloud(-500, 300);
-    drawCloud(-700, 380);
+    drawCloud(cloud1X, 450);
+    drawCloud(cloud2X, 400);
+    drawCloud(cloud3X, 350);
+    drawCloud(cloud4X, 300);
+
+    // BIRD
+    drawFlyingBird(bird1X, 400, 55);
+    drawFlyingBird(bird2X, 420, 55);
+    drawFlyingBird(bird3X, 380, 55);
+
+
+
+
 
 
     //Grass
@@ -491,8 +565,6 @@ void display() {
     //tree
 
     drawTree(-120, -280);
-
-
 
 
 
@@ -872,16 +944,17 @@ void display() {
     glFlush();
 }
 
+
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(1300, 700);
-    glutInitWindowPosition(0, 0);
     glutCreateWindow("School Scenery");
-
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
+    init();
     glutDisplayFunc(display);
+    glutTimerFunc(33, updateCloud, 0);
+    glutTimerFunc(16, updateBirdPosition, 0);
+
     glutMainLoop();
     return 0;
 }
