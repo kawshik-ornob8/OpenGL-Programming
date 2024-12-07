@@ -51,7 +51,8 @@ The program includes various elements like a school building, sun, clouds, trees
   - `display`: Main rendering function for the entire scene.
 
 ## Preview
-<img src="https://github.com/user-attachments/assets/83ab5ec9-a065-4671-87ac-af09962d743a" alt="Door Control System" width="600px">
+<img src="https://github.com/user-attachments/assets/c6e03e61-ceb2-4637-8515-68836a9464b5" alt="Door Control System" width="600px">
+
 
 
 
