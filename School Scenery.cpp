@@ -21,7 +21,7 @@ int delay4 = 0;
 
 
 void init() {
-    glClearColor(0.5f, 0.5f, 1.0f, 1.0f); //background color
+    glClearColor(0.1f, 0.5f, 1.0f, 1.0f); //background color
     gluOrtho2D(-900, 500, -500, 500);      // Set coordinate system
 }
 
