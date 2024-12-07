@@ -1,9 +1,9 @@
 #include <windows.h>
 #include <GL/glut.h>
 #include <math.h>
+#include <string>
 
-float cloudX = -700;
-float cloudSpeed = 2.0f;
+
 
 
 // Variables for cloud positions
@@ -14,9 +14,9 @@ float cloud4X = -600.0f;
 
 // Time delays for each cloud
 int delay1 = 0;
-int delay2 = 1000;
-int delay3 = 2000;
-int delay4 = 3000;
+int delay2 = 0;
+int delay3 = 0;
+int delay4 = 0;
 
 
 
@@ -236,9 +236,31 @@ void drawFlag(float x, float y) {
     glEnd();
 }
 
+void drawSmallTree(float x, float y) {
+    // Draw tree trunk with longer height
+    glColor3f(0.55f, 0.27f, 0.07f); // Brown color for trunk
+    glBegin(GL_POLYGON);
+    glVertex2f(x - 5, y);          // Bottom-left of the trunk
+    glVertex2f(x + 5, y);          // Bottom-right of the trunk
+    glVertex2f(x + 5, y + 40);     // Top-right of the trunk (longer trunk)
+    glVertex2f(x - 5, y + 40);     // Top-left of the trunk
+    glEnd();
+
+    // Draw tree leaves as overlapping circles
+    drawCircle(x, y + 50, 15, 0.0f, 0.6f, 0.0f);   // Bottom circle of leaves
+    drawCircle(x - 10, y + 60, 15, 0.0f, 0.6f, 0.0f); // Left circle of leaves
+    drawCircle(x + 10, y + 60, 15, 0.0f, 0.6f, 0.0f); // Right circle of leaves
+    drawCircle(x, y + 70, 15, 0.0f, 0.6f, 0.0f);   // Top circle of leaves
+}
+
+
+
 
 void river() {
 
+    drawSmallTree(-550, 65);
+    drawSmallTree(-650, 45);
+    drawSmallTree(-750, 25);
 
     glBegin(GL_POLYGON);
     glColor3f(0.0f, 0.4f, 0.8f);
@@ -271,6 +293,15 @@ void river() {
     glVertex2f(-510, 50);
     glVertex2f(-530, 5);
 
+    glEnd();
+
+    //river grass
+    glBegin(GL_POLYGON);
+    glColor3f(0.0f, 0.5f, 0.0f);
+    glVertex2f(-900, 0);
+    glVertex2f(-900, -50);
+    glVertex2f(-350, 100);
+    glVertex2f(-350, 115);
     glEnd();
 
 
@@ -885,6 +916,11 @@ void display() {
     glVertex2f(-280, -415);
     glVertex2f(-260, -365);
 
+    glVertex2f(-280, -415);
+    glVertex2f(-250, -365);
+
+    glVertex2f(-280, -415);
+    glVertex2f(-300, -365);
     //more grass
     glVertex2f(-395, -430);
     glVertex2f(-395, -500);
@@ -952,8 +988,8 @@ int main(int argc, char** argv) {
     glutCreateWindow("School Scenery");
     init();
     glutDisplayFunc(display);
-    glutTimerFunc(33, updateCloud, 0);
-    glutTimerFunc(16, updateBirdPosition, 0);
+    glutTimerFunc(33, updateCloud, 0); // Cloud animation
+    glutTimerFunc(16, updateBirdPosition, 0);  // Update bird position every 16ms (60 FPS)
 
     glutMainLoop();
     return 0;
